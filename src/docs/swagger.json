@@ -1,0 +1,21 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "NOAA searcher.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Quick Descrip",
+            "headers":  {},
+            "examples": {
+            }
+          }
+        }
+      }
+    }
+  }
+}
