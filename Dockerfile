@@ -1,13 +1,16 @@
-FROM node:14.5.0
+FROM node:14.5-slim
 
-WORKDIR /usr/src/
-RUN mkdir data_handlers
-RUN mkdir docs
-
-COPY package*.json ../
+RUN apt update && apt upgrade
+RUN apt install -y curl
+WORKDIR /usr/src
+RUN mkdir /usr/src/data
+RUN mkdir /usr/src/src
+COPY src /usr/src/src
+COPY data /usr/src/data
+COPY package.json /usr/src
 RUN npm install
-COPY src/data_handlers/NOAA.js ./data_handlers
-COPY src/docs ./docs
-COPY src/app.js .
-EXPOSE 8080
-CMD [ "node", "app.js" ]
+WORKDIR /usr/src/
+
+EXPOSE 8080:8080
+#CMD tail -f /dev/null
+CMD [ "node", "./src/app.js" ]

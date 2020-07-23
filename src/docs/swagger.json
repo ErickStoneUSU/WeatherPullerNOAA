@@ -2,12 +2,31 @@
   "swagger": "2.0",
   "info": {
     "title": "NOAA searcher.",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "This searches for NOAA records by station id.  Courtesy of Erick Stone."
   },
+  "basePath": "/",
+  "host": "localhost:8080",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "search",
+      "description": "Search stuff"
+    }
+  ],
   "paths": {
     "/search": {
       "get": {
-        "parameters": ["", ""],
+        "tags": ["search"],
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "query",
+          "name": "station_id",
+          "description": "Id of the station.",
+          "type": "string"
+        }],
         "responses": {
           "200": {
             "description": "Returns a list of stations matching criteria using uri params style.",
@@ -29,11 +48,19 @@
         }
       }
     },
-    "/search:station_id": {
+    "/search/:station_id": {
       "get": {
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "path",
+          "name": "station_id",
+          "description": "Id of the station.",
+          "type": "string",
+          "required": true
+        }],
         "responses": {
           "200": {
-            "description": "Returns a list of stations matching criteria using route style.",
+            "description": "Returns a list of stations matching criteria using uri params style.",
             "headers":  {},
             "examples": {
               "station_id":"AE000041196",

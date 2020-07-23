@@ -5,14 +5,14 @@ const d = require('download');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
-const execSync = require("child_process");
+const execSync = require("child_process").execSync;
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const lineReader = require('line-reader');
 
 const app = express();
 const port = 8080;
-const path = './src/data_handlers/';
+const path = 'data/';
 
 let db = new sqlite3.Database(path + 'NOAA_DATA.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
     if (err) {
@@ -47,6 +47,7 @@ function collect(res, sql, params = []){
 
 function move_to_sql_db() {
     // todo ignore the inserts if the data already exists
+    console.log('Populating DB');
     let row_num = 0;
     run_now('CREATE TABLE IF NOT EXISTS fileData (station_id text, year_month text, element text, value1 text, mflag1 text, qflag1 text, sflag1 text, value2 text, MFLAG2 text, QFLAG2 text, SFLAG2 text)');
     lineReader.open(path + '2017.csv', function(err, reader) {
@@ -64,6 +65,7 @@ function move_to_sql_db() {
 
 function download_file() {
     if (!fs.existsSync( path + '2017.csv.gz')) {
+        console.log('Downloading file');
         execSync("curl -O ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2017.csv.gz", (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
@@ -81,6 +83,7 @@ function download_file() {
 
 function unzip_file() {
     if (!fs.existsSync(path + '2017.csv')) {
+        console.log('Unzipping file');
         const fileContents = fs.createReadStream(path + '2017.csv.gz');
         const writeStream = fs.createWriteStream(path + '2017.csv');
         const unzip = zlib.createGunzip();
@@ -98,11 +101,14 @@ function pull_data(res, station_id) {
 }
 
 function setup_api() {
-    app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
 function setup_routes() {
     // just one route needed per the spec
+    app.get('/', (req, res, next) => {
+        res.redirect('/docs');
+    });
     app.get('/search', (req, res, next) =>
         pull_data(res, req.query.station_id)
     );
