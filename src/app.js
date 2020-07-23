@@ -24,13 +24,6 @@ let db = new sqlite3.Database(path + 'NOAA_DATA.db', sqlite3.OPEN_READWRITE | sq
 
 
 function run_now(sql, params = []){
-    let db = new sqlite3.Database(path + 'NOAA_DATA.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
-        if (err) {
-            console.error(err.message);
-            throw err
-        }
-        console.log('Connected to the sqlite database.');
-    });
     db.run(sql, params, function (err) {
         if (err) {
             console.log('Error running sql ' + sql);
@@ -55,14 +48,14 @@ function collect(res, sql, params = []){
 
 function move_to_sql_db() {
     let row_num = 0;
-    run_now('CREATE TABLE IF NOT EXISTS fileData (id text, year_month text, element text, value1 text, mflag1 text, qflag1 text, sflag1 text, value2 text, MFLAG2 text, QFLAG2 text, SFLAG2 text)');
+    run_now('CREATE TABLE IF NOT EXISTS fileData (station_id text, year_month text, element text, value1 text, mflag1 text, qflag1 text, sflag1 text, value2 text, MFLAG2 text, QFLAG2 text, SFLAG2 text)');
     lineReader.open(path + '2017.csv', function(err, reader) {
         while (reader.hasNextLine()) {
             reader.nextLine(function(err, line) {
-                run_now('INSERT INTO fileData (id , year_month , element , value1 , mflag1 , qflag1 , sflag1 , value2 , MFLAG2 , QFLAG2 , SFLAG2) VALUES(?,?,?,?,?,?,?,?,?,?,?)', line.split(','));
+                run_now('INSERT INTO fileData (station_id , year_month , element , value1 , mflag1 , qflag1 , sflag1 , value2 , MFLAG2 , QFLAG2 , SFLAG2) VALUES(?,?,?,?,?,?,?,?,?,?,?)', line.split(','));
             });
             row_num += 1;
-            if (row_num > 10000){
+            if (row_num > 100){
                 break;
             }
         }
@@ -98,9 +91,9 @@ function unzip_file() {
 
 
 // API Things
-function pull_data(res, id) {
-    let que = 'select * from fileData where id = IFNULL(?,id)';
-    let params = [id];
+function pull_data(res, station_id) {
+    let que = 'select * from fileData where station_id = IFNULL(?,station_id)';
+    let params = [station_id];
     collect(res, que, params);
 }
 
@@ -111,10 +104,10 @@ function setup_api() {
 function setup_routes() {
     // just one route needed per the spec
     app.get('/', (req, res, next) =>
-        pull_data(res, req.query.id)
+        pull_data(res, req.query.station_id)
     );
-    app.get('/:id', (req, res, next) =>
-        pull_data(res, req.params.id)
+    app.get('/:station_id', (req, res, next) =>
+        pull_data(res, req.params.station_id)
     );
 }
 
