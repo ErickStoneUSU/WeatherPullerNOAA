@@ -98,15 +98,15 @@ function pull_data(res, station_id) {
 }
 
 function setup_api() {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
 function setup_routes() {
     // just one route needed per the spec
-    app.get('/', (req, res, next) =>
+    app.get('/search', (req, res, next) =>
         pull_data(res, req.query.station_id)
     );
-    app.get('/:station_id', (req, res, next) =>
+    app.get('/search/:station_id', (req, res, next) =>
         pull_data(res, req.params.station_id)
     );
 }

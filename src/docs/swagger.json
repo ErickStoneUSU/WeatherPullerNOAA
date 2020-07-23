@@ -5,13 +5,48 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/": {
+    "/search": {
+      "get": {
+        "parameters": ["", ""],
+        "responses": {
+          "200": {
+            "description": "Returns a list of stations matching criteria using uri params style.",
+            "headers":  {},
+            "examples": {
+              "station_id":"AE000041196",
+              "year_month":"20170101",
+              "element":"TAVG",
+              "value1":"217",
+              "mflag1":"H",
+              "qflag1":"",
+              "sflag1":"S",
+              "value2":"",
+              "MFLAG2":null,
+              "QFLAG2":null,
+              "SFLAG2":null
+            }
+          }
+        }
+      }
+    },
+    "/search:station_id": {
       "get": {
         "responses": {
           "200": {
-            "description": "Quick Descrip",
+            "description": "Returns a list of stations matching criteria using route style.",
             "headers":  {},
             "examples": {
+              "station_id":"AE000041196",
+              "year_month":"20170101",
+              "element":"TAVG",
+              "value1":"217",
+              "mflag1":"H",
+              "qflag1":"",
+              "sflag1":"S",
+              "value2":"",
+              "MFLAG2":null,
+              "QFLAG2":null,
+              "SFLAG2":null
             }
           }
         }
