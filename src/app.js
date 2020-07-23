@@ -11,7 +11,7 @@ const sqlite3 = require('sqlite3').verbose();
 const lineReader = require('line-reader');
 
 const app = express();
-const port = 3000;
+const port = 8080;
 const path = './src/data_handlers/';
 
 let db = new sqlite3.Database(path + 'NOAA_DATA.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
@@ -46,6 +46,7 @@ function collect(res, sql, params = []){
 }
 
 function move_to_sql_db() {
+    // todo ignore the inserts if the data already exists
     let row_num = 0;
     run_now('CREATE TABLE IF NOT EXISTS fileData (station_id text, year_month text, element text, value1 text, mflag1 text, qflag1 text, sflag1 text, value2 text, MFLAG2 text, QFLAG2 text, SFLAG2 text)');
     lineReader.open(path + '2017.csv', function(err, reader) {
@@ -115,9 +116,9 @@ function start() {
     app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 }
 
-// download_file();
-// unzip_file();
-// move_to_sql_db();
+download_file();
+unzip_file();
+move_to_sql_db();
 setup_api();
 setup_routes();
 start();
