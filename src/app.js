@@ -8,7 +8,6 @@ const swaggerDocument = require('./docs/swagger.json');
 const execSync = require("child_process");
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-const Promise = require('bluebird');
 const lineReader = require('line-reader');
 
 const app = express();
