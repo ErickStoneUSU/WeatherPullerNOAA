@@ -46,7 +46,6 @@ function collect(res, sql, params = []){
 }
 
 function move_to_sql_db() {
-    // todo ignore the inserts if the data already exists
     console.log('Populating DB');
     let row_num = 0;
     run_now('CREATE TABLE IF NOT EXISTS fileData (station_id text, year_month text, element text, value1 text, mflag1 text, qflag1 text, sflag1 text, value2 text, MFLAG2 text, QFLAG2 text, SFLAG2 text)');
@@ -56,6 +55,7 @@ function move_to_sql_db() {
                 run_now('INSERT INTO fileData (station_id , year_month , element , value1 , mflag1 , qflag1 , sflag1 , value2 , MFLAG2 , QFLAG2 , SFLAG2) VALUES(?,?,?,?,?,?,?,?,?,?,?)', line.split(','));
             });
             row_num += 1;
+            // artificial limit for fast testing and dev
             if (row_num > 100){
                 break;
             }
