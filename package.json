@@ -19,7 +19,7 @@
     "pako": "^1.0.11",
     "renderjson": "^1.4.0",
     "sqlite3": "^5.0.0",
-    "titanium": "^5.2.2",
+    "titanium": "^5.4.1",
     "unzip": "^0.1.11",
     "unzipper": "^0.10.11",
     "xmlhttprequest": "^1.8.0"
