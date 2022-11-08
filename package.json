@@ -10,7 +10,7 @@
     "download": "^8.0.0",
     "extract": "^1.0.0",
     "ftp": "^0.3.10",
-    "html-tablify": "^2.0.2",
+    "html-tablify": "^2.0.4",
     "lazy": "^1.0.11",
     "line-kit": "0.0.1",
     "line-reader": "^0.4.0",
